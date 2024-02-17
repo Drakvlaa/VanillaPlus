@@ -55,7 +55,7 @@ public final class PlayerEvents implements Listener {
     Component message = event.message();
 
     Component text = Component.text(player.getName())
-        .color(TextColor.fromCSSHexString("#5e249c")).decoration(TextDecoration.BOLD, true)
+        .color(TextColor.fromCSSHexString("#9c999a")).decoration(TextDecoration.BOLD, true)
         .append(Component.text(" ").color(TextColor.fromCSSHexString("#000000")))
         .append(message.color(TextColor.fromCSSHexString("#6E696F")).decoration(TextDecoration.BOLD, false));
 
