@@ -28,7 +28,6 @@ public final class PlayerEvents implements Listener {
       welcomeMessage = welcomeMessage.replace("%player%", player.getName());
       player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(welcomeMessage));
     }
-//    player.showTitle(Title.title(Component.text("Witaj,"), Component.text(player.getName()).color(NamedTextColor.YELLOW)));
     event.joinMessage(null);
     String joinMessage = VanillaPlus.GetInstance().getConfig().getString("join-message");
     if (joinMessage != null) {
