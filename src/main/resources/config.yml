@@ -1,0 +1,7 @@
+enabled-treecapacitor: true
+enabled-autosmelter: true
+# Server
+motd: "&a&lWitaj!"
+welcome-message: "&aWitaj, %player% na serwerze!"
+join-message: "&a+ %player%"
+quit-message: "&c- %player%"
