@@ -1,18 +1,28 @@
 name: VanillaPlus
-version: '${project.version}'
 main: com.drakula.vanillaplus.VanillaPlus
+description: Basic minecraft plugin adding quality of life features
+version: 1.0
 api-version: '1.20'
-authors:
-  - MODERR
-  - UtkajGofra
+authors: [UtkajGorfa, MODERR]
+website: github.com/Drakvlaa/VanillaPlus
 commands:
   vanillaplus:
-    aliases: vp
-    permission: vanillaplus.admin
-  Sethome:
+    aliases: [vp]
+    permission: vanillaplus.cmd.admin
+  sethome:
     description: Sets a home location
-  Home:
+    permission: vanillaplus.cmd.sethome
+  home:
     description: Teleports to home
+    permission: vanillaplus.cmd.home
+  chat:
+    description: Changes chat colors
+    permission: vanillaplus.cmd.chat
 permissions:
-  vanillaplus.admin:
+  vanillaplus.cmd.admin:
+    description: Allows manipulate plugin with vanillaplus command.
     default: op
+  vanillaplus.cmd.sethome:
+    default: true
+  vanillaplus.cmd.home:
+    default: true

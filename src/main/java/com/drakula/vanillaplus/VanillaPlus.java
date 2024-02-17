@@ -1,8 +1,10 @@
 package com.drakula.vanillaplus;
 
+import com.drakula.vanillaplus.commands.ChatConfigCommand;
 import com.drakula.vanillaplus.commands.HomeCommand;
 import com.drakula.vanillaplus.commands.SetHomeCommand;
 import com.drakula.vanillaplus.commands.VanillaPlusCommand;
+import com.drakula.vanillaplus.mechanics.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -42,6 +44,7 @@ public final class VanillaPlus extends JavaPlugin {
         Objects.requireNonNull(getCommand("sethome")).setExecutor(new SetHomeCommand());
         Objects.requireNonNull(getCommand("home")).setExecutor(new HomeCommand());
         Objects.requireNonNull(getCommand("vanillaplus")).setExecutor(new VanillaPlusCommand());
+        Objects.requireNonNull(getCommand("chat")).setExecutor(new ChatConfigCommand());
 
         Bukkit.getPluginManager().registerEvents(new ServerEvents(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerEvents(), this);

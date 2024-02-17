@@ -1,4 +1,4 @@
-package com.drakula.vanillaplus;
+package com.drakula.vanillaplus.mechanics;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -23,32 +24,24 @@ public final class AutoReplant implements Listener {
   @EventHandler(priority = EventPriority.MONITOR)
   public void RePlant(@NotNull BlockBreakEvent event) {
     if (event.isCancelled()) return;
-
     Player player = event.getPlayer();
     Block block = event.getBlock();
+    if (!isCrop(block)) return;
     Location loc = block.getLocation();
     World world = block.getWorld();
-
-    if (!isCrop(block)) return;
-
     BlockData data = block.getState().getBlockData();
-
-    if (!(data instanceof Ageable)) return;
-    Ageable ageable = (Ageable) data;
+    if (!(data instanceof Ageable ageable)) return;
     boolean canHarvest = ageable.getAge() == ageable.getMaximumAge();
     event.setCancelled(true);
-
     if (!canHarvest) {
       if (player.isSneaking()) {
         event.setCancelled(false);
         return;
       }
-      player.sendMessage(Component.text("Kucnij aby zniszczyć małe nasionka.").color(NamedTextColor.YELLOW));
+      player.sendMessage(Component.text("Kucnij aby zniszczyć małe nasionka.", NamedTextColor.YELLOW));
       return;
     }
-    for (ItemStack item : block.getDrops(player.getActiveItem())) {
-      world.dropItemNaturally(loc, item);
-    }
+    block.getDrops(player.getInventory().getItemInMainHand()).forEach((item) -> world.dropItemNaturally(loc, item));
     if (!consumeItem(player, 1, getSeeds(block))) {
       block.setType(Material.AIR);
       return;
@@ -56,28 +49,20 @@ public final class AutoReplant implements Listener {
     block.setType(block.getType());
   }
 
-  public Material getSeeds(@NotNull Block block) {
-    switch (block.getType()) {
-      case WHEAT:
-        return Material.WHEAT_SEEDS;
-      case CARROTS:
-        return Material.CARROT;
-      case POTATOES:
-        return Material.POTATO;
-      case BEETROOTS:
-        return Material.BEETROOT_SEEDS;
-      case MELON_STEM:
-        return Material.MELON_SEEDS;
-      case PUMPKIN_STEM:
-        return Material.PUMPKIN_SEEDS;
-      case NETHER_WART:
-        return Material.NETHER_WART;
-      default:
-        return null;
-    }
+  public @Nullable Material getSeeds(@NotNull Block block) {
+    return switch (block.getType()) {
+      case WHEAT -> Material.WHEAT_SEEDS;
+      case CARROTS -> Material.CARROT;
+      case POTATOES -> Material.POTATO;
+      case BEETROOTS -> Material.BEETROOT_SEEDS;
+      case MELON_STEM -> Material.MELON_SEEDS;
+      case PUMPKIN_STEM -> Material.PUMPKIN_SEEDS;
+      case NETHER_WART -> Material.NETHER_WART;
+      default -> null;
+    };
   }
 
-  public boolean isCrop(Block block) {
+  public boolean isCrop(@NotNull Block block) {
     return getSeeds(block) != null;
   }
 

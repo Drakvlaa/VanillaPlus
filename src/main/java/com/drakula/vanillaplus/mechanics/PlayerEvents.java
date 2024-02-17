@@ -1,12 +1,13 @@
-package com.drakula.vanillaplus;
+package com.drakula.vanillaplus.mechanics;
 
+import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
+import com.drakula.vanillaplus.VanillaPlus;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.title.Title;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +17,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public final class PlayerEvents implements Listener {
 
@@ -54,32 +58,25 @@ public final class PlayerEvents implements Listener {
     Player player = event.getPlayer();
     Component message = event.message();
 
-    Component text = Component.text(player.getName())
-        .color(TextColor.fromCSSHexString("#9c999a")).decoration(TextDecoration.BOLD, true)
-        .append(Component.text(" ").color(TextColor.fromCSSHexString("#000000")))
-        .append(message.color(TextColor.fromCSSHexString("#6E696F")).decoration(TextDecoration.BOLD, false));
+    String chatMessage = VanillaPlus.GetInstance().getConfig().getString("chat-prefix");
+    if (chatMessage != null) {
+      chatMessage = chatMessage.replace("%player%", player.getName());
+    } else {
+      chatMessage = player.getName();
+    }
 
-
-    Bukkit.broadcast(text);
+    Component chat = LegacyComponentSerializer.legacyAmpersand().deserialize(chatMessage + " " + PlainTextComponentSerializer.plainText().serialize(message));
+    Bukkit.broadcast(chat);
   }
 
   @EventHandler
-  public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
+  public void onPlayerDeath(@NotNull PlayerPostRespawnEvent event) {
     Player player = event.getPlayer();
     FileConfiguration config = VanillaPlus.GetInstance().getCustomConfig();
     String homePath = player.getName() + ".location";
-    if (!config.isSet(homePath)) {
-      player.sendMessage("Nie masz domu, użyj komendy Sethome aby go dodac");
-      return;
-    }
-    // home ustawiony
-    Location home = config.getLocation(homePath);
-    Component text = Component.text(" Umarłeś! teleportuje do domu...").color(TextColor.fromHexString("#FF0001"));
-    player.sendMessage(text);
-    // PlayerDeathEvent jest callowany w momencie smierci i trzeba tepnac gracza tick pozniej
-    Bukkit.getScheduler().runTask(VanillaPlus.GetInstance(), () -> {
-      player.teleport(home);
-    });
+    if (!config.isSet(homePath)) return;
+    player.teleport(Objects.requireNonNull(config.getLocation(homePath)));
+    player.sendMessage(Component.text("Umarłeś! Zostałeś przeteleportowany do domu.", TextColor.fromHexString("#FF0001")));
   }
 
 }

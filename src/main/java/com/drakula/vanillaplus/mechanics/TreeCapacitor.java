@@ -1,5 +1,6 @@
-package com.drakula.vanillaplus;
+package com.drakula.vanillaplus.mechanics;
 
+import com.drakula.vanillaplus.VanillaPlus;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;

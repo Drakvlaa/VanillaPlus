@@ -1,14 +1,10 @@
-package com.drakula.vanillaplus;
+package com.drakula.vanillaplus.mechanics;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import com.drakula.vanillaplus.VanillaPlus;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.title.Title;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
 public final class ServerEvents implements Listener {
